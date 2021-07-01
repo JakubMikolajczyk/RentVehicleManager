@@ -11,8 +11,8 @@ public class Database implements Serializable {
         private HashSet <Truck> trucks;
         private HashSet <String> idInDatabase;
         private HashSet <String> registrationPlateInDatabase;
-        private HashMap<String, String> rentRegistryPlate;      //<registryPlate, id>
-        private HashMap<String, ArrayList<String>> rentId;       //<Id, registryPlates[]>
+        private HashMap<String, String> rentRegistrationPlate;      //<registrationPlate, id>
+        private HashMap<String, HashSet<String>> rentId;       //<Id, registrationPlates[]>
 
         public Database(){
                 saved = true;
@@ -21,7 +21,7 @@ public class Database implements Serializable {
                 registrationPlateInDatabase = new HashSet<>();
                 trucks = new HashSet<>();
                 cars = new HashSet<>();
-                rentRegistryPlate = new HashMap<>();
+                rentRegistrationPlate = new HashMap<>();
                 rentId = new HashMap<>();
         }
 
@@ -29,22 +29,22 @@ public class Database implements Serializable {
                 return rentId.containsKey(id);
         }
 
-        boolean isVehicleRent(String registryPlate){
-                return rentRegistryPlate.containsKey(registryPlate);
+        boolean isVehicleRent(String registrationPlate){
+                return rentRegistrationPlate.containsKey(registrationPlate);
         }
 
-        public void rent(String id, String registryPlate){
+        public void rent(String id, String registrationPlate){
 
                 saved = false;
-                rentRegistryPlate.put(registryPlate,id);
+                rentRegistrationPlate.put(registrationPlate,id);
 
-                ArrayList <String> list= rentId.get(id);
+                HashSet<String> hashSet= rentId.get(id);
 
-                if (list == null)
-                        list = new ArrayList<>();
+                if (hashSet == null)
+                        hashSet = new HashSet<>();
 
-                list.add(registryPlate);
-                rentId.put(id,list);
+                hashSet.add(registrationPlate);
+                rentId.put(id,hashSet);
         }
 
         public ArrayList<Client> searchClientInDatabase(ClientCompare clientCompare){
@@ -60,7 +60,7 @@ public class Database implements Serializable {
 
         }
 
-//        private void
+
 
         public void addToDatabase(Client newC){
 
@@ -85,26 +85,60 @@ public class Database implements Serializable {
 
         }
 
-        public void editInDatabase(Client old, Client newClient){
+        private void changeRentId(String oldId,String newId){
 
-                saved = false;
-                clients.remove(old);
-                clients.add(newClient);
+                HashSet <String> hashSet = rentId.get(oldId);
+                rentId.remove(oldId);
+                rentId.put(newId, hashSet);
+
+                for (String it : hashSet)
+                        rentRegistrationPlate.put(it, newId);       //update
 
         }
 
-        public void editInDatabase(Truck old, Truck newTruck){
+        private void changeRentRegistrationPlate(String oldRegistrationPlate, String newRegistrationPlate){
+
+                String id = rentRegistrationPlate.get(oldRegistrationPlate);
+                rentRegistrationPlate.remove(oldRegistrationPlate);
+                rentRegistrationPlate.put(newRegistrationPlate,id);
+
+                HashSet<String> hashSet = rentId.get(id);
+                hashSet.remove(oldRegistrationPlate);
+                hashSet.add(newRegistrationPlate);
+
+                rentId.put(id,hashSet);
+
+        }
+
+        public void editInDatabase(Client oldClient, Client newClient){
+
+                if (hasRentVehicle(oldClient.id))
+                        changeRentId(oldClient.id,newClient.id);        //changing in rent
 
                 saved = false;
-                trucks.remove(old);
+                clients.remove(oldClient);
+                clients.add(newClient);
+
+
+        }
+
+        public void editInDatabase(Truck oldTruck, Truck newTruck){
+
+                if (isVehicleRent(oldTruck.registrationPlate))
+                        changeRentRegistrationPlate(oldTruck.registrationPlate,newTruck.registrationPlate);
+
+                saved = false;
+                trucks.remove(oldTruck);
                 trucks.add(newTruck);
 
         }
 
-        public void editInDatabase(Car old, Car newCar){
+        public void editInDatabase(Car oldCar, Car newCar){
 
+                if (isVehicleRent(oldCar.registrationPlate))
+                        changeRentRegistrationPlate(oldCar.registrationPlate,newCar.registrationPlate);
                 saved = false;
-                cars.remove(old);
+                cars.remove(oldCar);
                 cars.add(newCar);
 
         }

@@ -27,9 +27,11 @@ public class SearchClientPanel extends JPanel implements ActionListener {
         JPanel search = new JPanel();
         search.setLayout(new MigLayout());
 
+        //TODO repair searchClientPanel resolution, trouble with jsp.setPreferredSize
+
         clientSearchPanel = new ClientSearchPanel(new Client(),true);
         search.add(clientSearchPanel,"span 2, wrap");
-//        search.setPreferredSize(new Dimension(4, 400));
+        clientSearchPanel.setPreferredSize(new Dimension(400, 400));
         search.add(new Button(this,"Search in database","search"),"width 295");
         search.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
 
@@ -39,7 +41,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         searchClientResults = new SearchClientResults(database);
         JScrollPane jsp = new JScrollPane(searchClientResults);
-//        jsp.setPreferredSize(new Dimension(900, 200));
+        jsp.setPreferredSize(new Dimension(900, 200));
         results.add(jsp,"wrap, span 2");
         results.add(new Button(this,"Return to search","returnSearch"),"width 295");
         results.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
