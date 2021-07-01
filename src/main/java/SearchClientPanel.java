@@ -14,7 +14,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
    private JPanel mainPanel;
    private ClientSearchPanel clientSearchPanel;
    private SearchClientResults searchClientResults;
-
+   private JScrollPane jsp;
 
     public SearchClientPanel(App listener, Database database){
 
@@ -31,7 +31,6 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         clientSearchPanel = new ClientSearchPanel(new Client(),true);
         search.add(clientSearchPanel,"span 2, wrap");
-        clientSearchPanel.setPreferredSize(new Dimension(400, 400));
         search.add(new Button(this,"Search in database","search"),"width 295");
         search.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
 
@@ -40,8 +39,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
 
         searchClientResults = new SearchClientResults(database);
-        JScrollPane jsp = new JScrollPane(searchClientResults);
-        jsp.setPreferredSize(new Dimension(900, 200));
+        jsp = new JScrollPane(searchClientResults);
         results.add(jsp,"wrap, span 2");
         results.add(new Button(this,"Return to search","returnSearch"),"width 295");
         results.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
@@ -64,6 +62,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
             if (clients.size() == 0)
                 System.out.println("WAR");  //TODO No result warning
             else {
+                jsp.setPreferredSize(new Dimension(900, 200));
                 searchClientResults.newSearch(clients);
                 cardLayout.show(mainPanel, "results");
                 listener.setSize(1000, 300);
@@ -71,14 +70,16 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         }
 
-        if (e.getActionCommand().equals("returnSearch"))
-            cardLayout.show(mainPanel,"search");
-
+        if (e.getActionCommand().equals("returnSearch")){
+            searchMode();
+//            cardLayout.show(mainPanel, "search");
+        }
     }
 
     public void searchMode(){
-        cardLayout.show(mainPanel,"search");
         listener.setSize(640,350);
+        jsp.setPreferredSize(new Dimension(100,100));
+        cardLayout.show(mainPanel,"search");
     }
 
 }
