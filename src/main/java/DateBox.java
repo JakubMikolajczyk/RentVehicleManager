@@ -25,7 +25,6 @@ public class DateBox extends JPanel implements ActionListener {
     public DateBox() {
 
         setLayout(new GridLayout(1, 3));
-
         cardLayout = new CardLayout();
         mainDays = new JPanel(cardLayout);
 
@@ -62,8 +61,6 @@ public class DateBox extends JPanel implements ActionListener {
         add(mainDays);
         add(months);
         add(years);
-
-        System.out.println();
     }
 
     @Override

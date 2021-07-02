@@ -1,8 +1,10 @@
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.jar.JarEntry;
 
 public class ClientSearchPanel extends ClientPanel implements ActionListener {
 
@@ -36,56 +38,63 @@ public class ClientSearchPanel extends ClientPanel implements ActionListener {
     public ClientSearchPanel(Client client, boolean editable) {
         super(client, editable);
 
+//        addClientLayout();
+
         String[] stringOptions = {"equal","begin","end","contain"};
         String[] intOptions = {"==","<","<=",">",">="};
-        String label = "wrap, height 25, ";
-        String box = "wrap, height 25, ";
 
-        JPanel left = new JPanel();
-        left.setLayout(new MigLayout());
+//        setLayout(new GridLayout(0,4));
 
-        left.add(new Label(""),label);
+        setLayout(new MigLayout("wrap 4"));
+
         nameCombo = new ComboBox(this,stringOptions);
-        left.add(nameCombo,box);
+        add(new Box(new Label(""),nameCombo));
+        add(nameBox);
 
-        left.add(new Label(""),label);
-        idCombo = new ComboBox(this,stringOptions);
-        left.add(idCombo,box);
 
-        left.add(new Label(""),label);
-        cityCombo = new ComboBox(this,stringOptions);
-        left.add(cityCombo,box);
-
-        left.add(new Label(""),label);
-        streetCombo = new ComboBox(this,stringOptions);
-        left.add(streetCombo,box);
-
-        add(left,"west");
-
-        JPanel right = new JPanel();
-        right.setLayout(new MigLayout());
-
-        right.add(new Label(""),label);
         surnameCombo = new ComboBox(this,stringOptions);
-        right.add(surnameCombo,box + "width 30");
+        add(new Box(new Label(""),surnameCombo) );
+        add(surnameBox);
 
-        right.add(new Label(""),label);
+        idCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),idCombo));
+        add(idBox);
+
         dateCombo = new ComboBox(this,intOptions);
-        right.add(dateCombo,box+ "width 30");
+        add(new Box(new Label(""),dateCombo));
+        add(dateBox);
 
-        right.add(new Label(""),label);
+        cityCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),cityCombo));
+        add(cityBox);
+
         zipCodeCombo = new ComboBox(this,stringOptions);
-        right.add(zipCodeCombo,box+ "width 30");
+        add(new Box(new Label(""),zipCodeCombo));
+        add(zipCodeBox);
 
-        right.add(new Label(""),label);
+
+        streetCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),streetCombo));
+        add(streetBox);
+
+
+
+        JPanel box1 = new JPanel();
+        box1.setLayout(new GridLayout(1,2));
+
+        JPanel box2 = new JPanel();
+        box2.setLayout(new GridLayout(1,2  ));
         buildingNumberCombo = new ComboBox(this,intOptions);
-        right.add(buildingNumberCombo,"height 25 , split 2");
 
-//        right.add(new Label(""),label);
+        box1.add(new Box(new Label(""),buildingNumberCombo));
+        box1.add(buildingNumberBox);
+
+        add(box1);
+
         apartmentNumberCombo = new ComboBox(this,intOptions);
-        right.add(apartmentNumberCombo,box+ "width 30");
-
-        add(right,"east");
+        box2.add(new Box(new Label(""),apartmentNumberCombo));
+        box2.add(apartmentNumberBox);
+        add(box2);
 
 
     }

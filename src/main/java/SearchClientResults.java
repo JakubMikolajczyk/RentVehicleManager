@@ -20,7 +20,7 @@ public class SearchClientResults extends JPanel {
         for (Client client : clients){
 //        Client client = clients.get(0);
             ClientPanel panel = new ClientPanel(client,false);
-            panel.asSearchResult();
+            panel.resultLayout();
             panel.addMouseListener(new MouseAdapter(){
                 public void mouseClicked(MouseEvent e) {
                     Object[] options = {"Edit","Remove","Cancel"};

@@ -6,6 +6,7 @@ import java.awt.*;
 public class ClientPanel extends JPanel {
 
 
+
     private TextField nameField;
     private TextField surnameField;
     private TextField idField;
@@ -14,92 +15,114 @@ public class ClientPanel extends JPanel {
     private TextField cityField;
     private TextField buildingNumberField;
     private TextField apartmentNumberField;
+    private DateBox dateComboBox;
 
-    private DateBox dateBox;
-
-    private JPanel top;
-    private JPanel down;
+    protected Box nameBox;
+    protected Box surnameBox;
+    protected Box idBox;
+    protected Box zipCodeBox;
+    protected Box streetBox;
+    protected Box cityBox;
+    protected Box buildingNumberBox;
+    protected Box apartmentNumberBox;
+    protected Box dateBox;
 
     public ClientPanel(Client client, boolean editable){
 
-        top = new JPanel();
-        top.setLayout(new MigLayout());
+        setBorder(BorderFactory.createLineBorder(Color.black));
 
-
-        String height = "height 25, ";
-
-        top.add(new Label("Name"),height + "width 200");
-        top.add(new Label("Surname"),height + "wrap, " + "width 200");
 
         nameField = new TextField("Name", client.name,editable);
-        surnameField = new TextField("Surname",client.surname,editable);
-        top.add(nameField,height + "width 200");
-        top.add(surnameField,height + "wrap, width 200");
+        nameBox = new Box(new Label("Name"),nameField);
 
-        top.add(new Label("Id"),height);
-        top.add(new Label("Birth date DD-MM-YYYY"),height + "wrap");
+        surnameField = new TextField("Surname",client.surname,editable);
+        surnameBox = new Box(new Label("Surname"),surnameField);
 
         idField = new TextField("Id", client.id,editable);
-        top.add(idField,height+ "width 200");
+        idBox = new Box(new Label("Id"),idField);
 
         if (editable) {
-            dateBox = new DateBox();
-            top.add(dateBox, height + "width 200");
+            dateComboBox = new DateBox();
+            dateBox = new Box(new Label("Birth date DD-MM-YYYY"),dateComboBox);
         }
         else
         {
-            top.add(new TextField("Day",Integer.toString(client.birthDate.day),false),"split 3, width 50");
-            top.add(new TextField("Month",Integer.toString(client.birthDate.month),false),"width 50");
-            top.add(new TextField("Year",Integer.toString(client.birthDate.year),false)," width 100");
+            JPanel date = new JPanel();
+            date.setLayout(new GridLayout(1,3));
+
+            date.add(new TextField("Day",Integer.toString(client.birthDate.day),false),"split 3, width 50");
+            date.add(new TextField("Month",Integer.toString(client.birthDate.month),false),"width 50");
+            date.add(new TextField("Year",Integer.toString(client.birthDate.year),false)," width 100");
+
+            dateBox = new Box(new Label("Birth date DD-MM-YYYY"),date);
         }
 
-
-        down = new JPanel();
-        down.setLayout(new MigLayout());
-
-        down.add(new Label("City"),height);
-        down.add(new Label("ZIP code"),height + "wrap");
-
         cityField = new TextField("City",client.address.city,editable);
-        down.add(cityField,height + "width 200");
+        cityBox = new Box(new Label("City"),cityField);
 
         zipCodeField = new TextField("ZIP code",client.address.zipCode,editable);
-        down.add(zipCodeField,height + "wrap, width 200");
-
-        down.add(new Label("Street"),height);
-        down.add(new Label("No. building"),height + "split 2");
-        down.add(new Label("No. apartment"), height + "wrap");
+        zipCodeBox = new Box(new Label("ZIP Code"),zipCodeField);
 
         streetField = new TextField("Street",client.address.street,editable);
-        down.add(streetField,height + "width 200");
+        streetBox = new Box(new Label("Street"),streetField);
+
 
         if (client.address.buildingNumber == 0 && editable)
             buildingNumberField = new TextField("No. building","No. building",true);
         else
             buildingNumberField = new TextField("No. building",Integer.toString(client.address.buildingNumber),false);
 
-        down.add(buildingNumberField,height + "split 2, width 100");
+        buildingNumberBox = new Box(new Label("No. building"),buildingNumberField);
+
 
         if (client.address.apartmentNumber == 0 && editable)
             apartmentNumberField = new TextField("No. apartment","No. apartment",true);
         else
             apartmentNumberField = new TextField("No. apartment",Integer.toString(client.address.apartmentNumber),false);
 
-        down.add(apartmentNumberField,height + "width 100, wrap");
+        apartmentNumberBox = new Box(new Label("No. apartment"),apartmentNumberField);
 
-        setLayout(new MigLayout());
-
-        add(top,"wrap 0");
-        add(down);
-
-        setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
-    public void asSearchResult(){
+    public void addClientLayout(){
         removeAll();
-        add(top);
-        add(down);
-        repaint();
+        setLayout(new GridLayout(0,2));
+
+        add(nameBox);
+        add(surnameBox);
+
+        add(idBox);
+        add(dateBox);
+
+        add(cityBox);
+        add(zipCodeBox);
+
+        add(streetBox);
+
+        JPanel test= new JPanel();
+        test.setLayout(new GridLayout(0,2));
+        test.add(buildingNumberBox);
+        test.add(apartmentNumberBox);
+        add(test);
+    }
+
+    public void resultLayout(){
+        removeAll();
+        JPanel test= new JPanel();
+        test.setLayout(new GridLayout(0,2));
+        test.add(buildingNumberBox);
+        test.add(apartmentNumberBox);
+
+        setLayout(new GridLayout(0,4));
+        add(nameBox);
+        add(surnameBox);
+        add(cityBox);
+        add(zipCodeBox);
+
+        add(idBox);
+        add(dateBox);
+        add(streetBox);
+        add(test);
     }
 
     public void addToDatabase(Database database){
@@ -116,7 +139,7 @@ public class ClientPanel extends JPanel {
         newC.surname = surnameField.getTxt();
         newC.id = idField.getTxt();
 
-        newC.birthDate = dateBox.getDate();
+        newC.birthDate = dateComboBox.getDate();
 
         newC.address.city = cityField.getTxt();
         newC.address.zipCode = zipCodeField.getTxt();

@@ -62,10 +62,10 @@ public class SearchClientPanel extends JPanel implements ActionListener {
             if (clients.size() == 0)
                 System.out.println("WAR");  //TODO No result warning
             else {
-                jsp.setPreferredSize(new Dimension(900, 200));
+                jsp.setPreferredSize(new Dimension(900, 120));
                 searchClientResults.newSearch(clients);
                 cardLayout.show(mainPanel, "results");
-                listener.setSize(1000, 300);
+                listener.setSize(1000, 300);  //TODO
             }
 
         }
