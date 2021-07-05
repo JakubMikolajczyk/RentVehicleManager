@@ -93,10 +93,15 @@ public class CarPanel extends VehiclePanel{
         return newCompare;
     }
 
-    protected boolean validCheck(Database database){
-        return super.validCheck(database)
+    public boolean intCheck(){
+        return super.intCheck()
                 && isInt(seatsField,"Seats")
                 && isInt(doorsField,"Doors");
+    }
+
+    protected boolean validCheck(Database database){
+        return super.validCheck(database)
+                && intCheck();
     }
 
     public Car getVehicle() {

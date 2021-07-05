@@ -195,26 +195,28 @@ public class VehiclePanel extends JPanel implements ActionListener {
 
     }
 
-    protected boolean validCheck(Database database){
-        boolean test = isInt(mileageField,"Mileage")
+    public boolean intCheck(){
+        return isInt(mileageField,"Mileage")
                 && isInt(produceYearField,"Produce year");
+    }
 
+    public boolean registrationPlateCheck(Database database){
 
-        if (test){
-
-            if(registrationPlateField.getTxt().equals("0")) {
-                JOptionPane.showMessageDialog(this, "Registry plate must be fill.", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            if (database.registrationPlateCheck(registrationPlateField.getTxt())) {
-                JOptionPane.showMessageDialog(this, "Registry plate must be unique. " + registrationPlateField.getTxt() + " is in database", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
+        if(registrationPlateField.getTxt().equals("0")) {
+            JOptionPane.showMessageDialog(this, "Registry plate must be fill.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
 
-        return test;
+        if (database.registrationPlateCheck(registrationPlateField.getTxt())) {
+            JOptionPane.showMessageDialog(this, "Registry plate must be unique. " + registrationPlateField.getTxt() + " is in database", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean validCheck(Database database){
+        return intCheck() && registrationPlateCheck(database);
 
     }
 

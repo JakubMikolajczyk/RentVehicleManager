@@ -20,8 +20,36 @@ public class ClientCompare extends ParamCompare{
     }
 
     public boolean dateCompare(Date fromDatabase){
-        //TODO dateCompare
-        return true;
+
+        if (birthDateParam == 0){
+            return intCompare(client.birthDate.year, fromDatabase.year, birthDateParam)
+                    && intCompare(client.birthDate.month,fromDatabase.month,birthDateParam)
+                    && intCompare(client.birthDate.day, fromDatabase.day, birthDateParam);
+        }
+
+        if(birthDateParam == 1 || birthDateParam == 3){
+            return intCompare(client.birthDate.year, fromDatabase.year, birthDateParam)
+                    || intCompare(client.birthDate.month,fromDatabase.month,birthDateParam)
+                    || intCompare(client.birthDate.day, fromDatabase.day, birthDateParam);
+        }
+
+        if (birthDateParam == 2 || birthDateParam == 4){
+
+            if (intCompare(client.birthDate.year, fromDatabase.year, 0))
+                if (intCompare(client.birthDate.month,fromDatabase.month,0))
+                    if (intCompare(client.birthDate.day, fromDatabase.day, 0))
+                        return true;
+                    else
+                        return intCompare(client.birthDate.day, fromDatabase.day, birthDateParam);
+                else
+                    return intCompare(client.birthDate.month,fromDatabase.month,birthDateParam);
+            else
+                return intCompare(client.birthDate.year, fromDatabase.year, birthDateParam);
+
+        }
+
+        return false;
+
     }
 
     public boolean compare(Client fromDatabase){

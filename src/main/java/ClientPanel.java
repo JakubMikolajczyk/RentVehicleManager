@@ -293,25 +293,30 @@ public class ClientPanel extends JPanel implements ActionListener {
 
     }
 
-    public boolean validCheck(Database database){
-        boolean test = isInt(apartmentNumberField,"No. apartment")
+    public boolean intCheck(){
+        return isInt(apartmentNumberField,"No. apartment")
                 && isInt(buildingNumberField,"No. building");
+    }
 
-        if (test){
+    public boolean idCheck(Database database){
 
-            if(idField.getTxt().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Id must be fill.", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
-            if (database.idCheck(idField.getTxt())) {
-                JOptionPane.showMessageDialog(this, "Id must be unique. " + idField.getTxt() + " is in database", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-
+        if(idField.getTxt().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Id must be fill.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
 
-        return test;
+        if (database.idCheck(idField.getTxt())) {
+            JOptionPane.showMessageDialog(this, "Id must be unique. " + idField.getTxt() + " is in database", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public boolean validCheck(Database database){
+
+        return intCheck() && idCheck(database);
 
     }
 

@@ -58,8 +58,10 @@ public class SearchClientResults extends JPanel {
         newPanel.addLayout();
         int n = JOptionPane.showOptionDialog(null,newPanel,"Client edit",JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
 
-        if (n == 0 && newPanel.validCheck(database) &&
-                0 ==   JOptionPane.showConfirmDialog(this, "Are you sure to edit client?", "Confirm", JOptionPane.YES_NO_OPTION))
+        if (n == 0
+                && newPanel.intCheck()
+                && (newPanel.getClient().id.equals(client.id) || newPanel.idCheck(database))
+                && 0 ==   JOptionPane.showConfirmDialog(this, "Are you sure to edit client?", "Confirm", JOptionPane.YES_NO_OPTION))
         {
             remove(panel);      //remove old panel
 

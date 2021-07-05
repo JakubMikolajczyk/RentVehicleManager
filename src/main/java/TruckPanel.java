@@ -57,10 +57,16 @@ public class TruckPanel extends VehiclePanel{
         add(maxWeightBox);
     }
 
-    protected boolean validCheck(Database database){
-        return super.validCheck(database)
+    @Override
+    public boolean intCheck(){
+        return super.intCheck()
                 && isInt(capacityField,"Capacity")
                 && isInt(maxWeightField,"Max weight");
+    }
+
+    @Override
+    protected boolean validCheck(Database database){
+        return super.validCheck(database) && intCheck();
     }
     @Override
     public void searchLayout(){
