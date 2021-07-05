@@ -27,30 +27,30 @@ public class SearchClientPanel extends JPanel implements ActionListener {
         JPanel search = new JPanel();
         search.setLayout(new MigLayout());
 
-        //TODO repair searchClientPanel resolution, trouble with jsp.setPreferredSize
 
         clientSearchPanel = new ClientPanel(new Client(),true);
         clientSearchPanel.searchLayout();
 
         search.add(clientSearchPanel,"span 2, wrap");
-        search.add(new Button(this,"Search in database","search"),"width 295");
-        search.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
+        search.add(new Button(this,"Search in database","search"),"width 265");
+        search.add(new Button(listener,"Return to menu","returnMenu"),"width 265");
 
         JPanel results = new JPanel();
         results.setLayout(new MigLayout());
 
-
         searchClientResults = new SearchClientResults(database);
         jsp = new JScrollPane(searchClientResults);
         results.add(jsp,"wrap, span 2");
-        results.add(new Button(this,"Return to search","returnSearch"),"width 295");
-        results.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
+        results.add(new Button(this,"Return to search","returnSearch"),"width 380");
+        results.add(new Button(listener,"Return to menu","returnMenu"),"width 380");
 
 
         mainPanel.add(search,"search");
         mainPanel.add(results, "results");
 
-        add(mainPanel);
+        setLayout(new MigLayout());
+        setSize(new Dimension(560,330));
+        add(mainPanel,"alignX right");
 
     }
 
@@ -62,12 +62,12 @@ public class SearchClientPanel extends JPanel implements ActionListener {
             ArrayList<Client> clients = database.searchClientInDatabase(clientSearchPanel.getCompare());
 
             if (clients.size() == 0)
-                System.out.println("WAR");  //TODO No result warning
+                JOptionPane.showMessageDialog(this,"Not result found");
             else {
-                jsp.setPreferredSize(new Dimension(900, 120));
+                jsp.setPreferredSize(new Dimension(760, 130));
                 searchClientResults.newSearch(clients,clientSearchPanel.getCompare());
                 cardLayout.show(mainPanel, "results");
-                listener.setSize(1000, 300);  //TODO
+                listener.setSize(760, 220);
             }
 
         }
@@ -79,7 +79,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
     }
 
     public void searchMode(){
-        listener.setSize(640,350);
+        listener.setSize(new Dimension(560,330));
         jsp.setPreferredSize(new Dimension(100,100));
         cardLayout.show(mainPanel,"search");
     }

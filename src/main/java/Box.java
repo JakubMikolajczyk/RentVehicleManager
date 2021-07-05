@@ -9,6 +9,7 @@ public class Box extends JPanel {//make box 2x1
         setLayout(new GridLayout(0,1));
         add((Component) obj1);
         add((Component) obj2);
+        setPreferredSize(new Dimension(200,20));
 
     }
 

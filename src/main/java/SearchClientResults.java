@@ -80,7 +80,7 @@ public class SearchClientResults extends JPanel {
         int n = 0;
 
         if (database.hasRentVehicle(client.id))
-            n = JOptionPane.showConfirmDialog(this, "This client has rent car? Remove anyway?", "Confirm", JOptionPane.YES_NO_OPTION);
+            n = JOptionPane.showConfirmDialog(this, "This client has rent vehicle? Remove anyway?", "Confirm", JOptionPane.YES_NO_OPTION);
 
         if (n == 0) {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to remove client from database?", "Confirm", JOptionPane.YES_NO_OPTION);

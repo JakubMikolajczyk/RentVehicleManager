@@ -8,6 +8,7 @@ public class ComboBox extends JComboBox<String> {
         super(list);
         addActionListener((ActionListener) listener);
         setSelectedIndex(0);
+
     }
 
     public ComboBox(String []list){

@@ -24,10 +24,6 @@ public class Database implements Serializable {
                 rentRegistrationPlate = new HashMap<>();
                 rentId = new HashMap<>();
 
-                Client client = new Client();
-                client.id="13";
-
-                clients.add(client);
         }
 
         boolean hasRentVehicle(String id){
@@ -50,6 +46,7 @@ public class Database implements Serializable {
 
                 hashSet.add(registrationPlate);
                 rentId.put(id,hashSet);
+
         }
 
         public ArrayList<Client> searchClientInDatabase(ClientCompare clientCompare){

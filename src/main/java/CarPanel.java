@@ -1,3 +1,5 @@
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,8 +43,16 @@ public class CarPanel extends VehiclePanel{
 
     @Override
     public void resultLayout() {
-        super.resultLayout();
-        add(seatsBox,0,3);
+        setLayout(new MigLayout("wrap 4","[150][150][150][150]"));
+
+        add(brandBox);
+        add(registrationPlateBox);
+        add(mileageBox);
+        add(seatsBox);
+
+        add(modelBox);
+        add(colorBox);
+        add(produceYearBox);
         add(doorsBox);
     }
 

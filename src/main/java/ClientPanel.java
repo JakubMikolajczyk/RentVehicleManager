@@ -75,11 +75,11 @@ public class ClientPanel extends JPanel implements ActionListener {
         else
         {
             JPanel date = new JPanel();
-            date.setLayout(new GridLayout(1,3));
+            date.setLayout(new GridLayout(0,3));
 
-            date.add(new TextField("Day",Integer.toString(client.birthDate.day),false),"split 3, width 50");
-            date.add(new TextField("Month",Integer.toString(client.birthDate.month),false),"width 50");
-            date.add(new TextField("Year",Integer.toString(client.birthDate.year),false)," width 100");
+            date.add(new TextField("Day",Integer.toString(client.birthDate.day),false));
+            date.add(new TextField("Month",Integer.toString(client.birthDate.month),false));
+            date.add(new TextField("Year",Integer.toString(client.birthDate.year),false));
 
             dateBox = new Box(new Label("Birth date DD-MM-YYYY"),date);
         }
@@ -131,6 +131,7 @@ public class ClientPanel extends JPanel implements ActionListener {
         test.add(buildingNumberBox);
         test.add(apartmentNumberBox);
         add(test);
+        setPreferredSize(new Dimension(430,290));
     }
 
     public void resultLayout(){
@@ -140,7 +141,7 @@ public class ClientPanel extends JPanel implements ActionListener {
         test.add(buildingNumberBox);
         test.add(apartmentNumberBox);
 
-        setLayout(new GridLayout(0,4));
+        setLayout(new MigLayout("wrap 4","[150][150][150][150]"));
         add(nameBox);
         add(surnameBox);
         add(cityBox);
@@ -154,12 +155,16 @@ public class ClientPanel extends JPanel implements ActionListener {
     }
 
     public void searchLayout(){
+        removeAll();
         String[] stringOptions = {"equal","begin","end","contain"};
         String[] intOptions = {"==","<","<=",">",">="};
 
-        setLayout(new GridLayout(0,4));
+        setLayout(new MigLayout("wrap 4", "[50][150][50][150]"));
         nameCombo = new ComboBox(this,stringOptions);
+
+//        nameCombo.setPreferredSize(new Dimension(50,20));
 //        nameBox.setPreferredSize(new Dimension(150,20));
+
         add(new Box(new Label(""),nameCombo));
         add(nameBox);
 
@@ -175,6 +180,9 @@ public class ClientPanel extends JPanel implements ActionListener {
         add(new Box(new Label(""),dateCombo));
         add(dateBox);
 
+        dateCombo.setPreferredSize(new Dimension(50,20));
+        dateBox.setPreferredSize(new Dimension(150,20));
+
         cityCombo = new ComboBox(this,stringOptions);
         add(new Box(new Label(""),cityCombo));
         add(cityBox);
@@ -187,7 +195,6 @@ public class ClientPanel extends JPanel implements ActionListener {
         add(new Box(new Label(""),streetCombo));
         add(streetBox);
 
-        //TODO repair size
         JPanel box1 = new JPanel();
         box1.setLayout(new GridLayout(1,2));
 
@@ -196,12 +203,12 @@ public class ClientPanel extends JPanel implements ActionListener {
         buildingNumberCombo = new ComboBox(this,intOptions);
 
         box1.add(new Box(new Label(""),buildingNumberCombo));
-        box1.add(buildingNumberBox);
+        box2.add(buildingNumberBox);
 
         add(box1);
 
         apartmentNumberCombo = new ComboBox(this,intOptions);
-        box2.add(new Box(new Label(""),apartmentNumberCombo));
+        box1.add(new Box(new Label(""),apartmentNumberCombo));
         box2.add(apartmentNumberBox);
         add(box2);
 

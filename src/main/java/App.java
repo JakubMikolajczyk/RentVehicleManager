@@ -6,8 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class App extends JFrame implements ActionListener{
 
@@ -27,8 +30,7 @@ public class App extends JFrame implements ActionListener{
     public App(){
 
         setTitle("Menu");
-
-        database = new Database();
+        loadDatabase();
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -37,7 +39,7 @@ public class App extends JFrame implements ActionListener{
         addClientJPanel = new AddClientPanel(this, database);
         addVehiclePanel = new AddVehiclePanel(this,database);
         searchClientPanel = new SearchClientPanel(this, database);
-        SearchVehiclePanel searchVehiclePanel = new SearchVehiclePanel(this, database);
+        searchVehiclePanel = new SearchVehiclePanel(this, database);
 
         mainPanel.add(menuJPanel,"menu");
         mainPanel.add(addClientJPanel,"addClient");
@@ -45,7 +47,7 @@ public class App extends JFrame implements ActionListener{
         mainPanel.add(searchClientPanel,"searchClient");
         mainPanel.add(searchVehiclePanel,"searchVehicle");
         add(mainPanel);
-        setLocation(700, 300);
+        setLocation(550, 300);
         setSize(new Dimension(200,300));
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -85,6 +87,7 @@ public class App extends JFrame implements ActionListener{
 
         if (source.equals("searchVehicle")) {
             cardLayout.show(mainPanel, "searchVehicle");
+            searchVehiclePanel.searchMode();
             searchInfo.info();
         }
 
@@ -104,36 +107,72 @@ public class App extends JFrame implements ActionListener{
 
     private void onExit(){
 
-        System.exit(1);
+        if (database.saved)
+            System.exit(1);
+        else{
+            Object[] options ={"Exit with save","Exit without save","Cancel"};
+            int n = JOptionPane.showOptionDialog(this, "Database is not save. What would you do?", "Action",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, null);
 
+            if (n == 0){
+                saveDatabase();
+                System.exit(1);
+            }
+
+            if (n == 1)
+                System.exit(1);
+        }
     }
 
     private void loadDatabase(){
 
+
+        try {
+
+            Gson gson = new Gson();
+
+            ObjectInputStream o = new ObjectInputStream(
+                    new FileInputStream("database.json")
+            );
+
+            String json = (String) o.readObject();
+
+            this.database = gson.fromJson(json,Database.class);
+            database.saved = true;
+            o.close();
+
+        } catch (Exception ex) {
+
+//                ex.printStackTrace();
+        this.database = new Database();
+        }
+
     }
 
-    private void saveDatabase(){
+    private void saveDatabase() {
 
-        Gson gson = new Gson().newBuilder().setPrettyPrinting().create();
+//        Gson gson = new Gson();
 
-        System.out.println(gson.toJson(database));
+        Gson gson = new Gson();
 
-//        try {
-//
-//            Gson gson = new Gson();
-//
-//            ObjectOutputStream o = new ObjectOutputStream(
-//                    new FileOutputStream("test.ser")
-//            );
-//
-//            o.writeObject(gson.toJson(database));
-//            o.close();
-//            System.out.println("Zapisano do pliku");
-//        } catch (Exception ex)
-//        {
-//            ex.printStackTrace();
-//        }
 
+        String json = gson.toJson(database);
+
+        try {
+
+            ObjectOutputStream o = new ObjectOutputStream(
+                    new FileOutputStream("database.json")
+            );
+
+            o.writeObject(json);
+            o.close();
+            JOptionPane.showMessageDialog(this,"Database save successfully");
+            database.saved = true;
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+
+        }
     }
 
 }

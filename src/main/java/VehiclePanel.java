@@ -1,3 +1,5 @@
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -6,32 +8,32 @@ import java.awt.event.ActionListener;
 public class VehiclePanel extends JPanel implements ActionListener {
 
     private TextField brandField;
-    private Box brandBox;
+    protected Box brandBox;
     private ComboBox brandCombo;
     private int brandIndex;
 
     private TextField modelField;
-    private Box modelBox;
+    protected Box modelBox;
     private ComboBox modelCombo;
     private int modelIndex;
 
     private TextField registrationPlateField;
-    private Box registrationPlateBox;
+    protected Box registrationPlateBox;
     private ComboBox registrationPlateCombo;
     private int registrationPlateIndex;
 
     private TextField colorField;
-    private Box colorBox;
+    protected Box colorBox;
     private ComboBox colorCombo;
     private int colorIndex;
 
     private TextField mileageField;
-    private Box mileageBox;
+    protected Box mileageBox;
     private ComboBox mileageCombo;
     private int mileageIndex;
 
     private TextField produceYearField;
-    private Box produceYearBox;
+    protected Box produceYearBox;
     private ComboBox produceYearCombo;
     private int produceYearIndex;
     
@@ -80,6 +82,7 @@ public class VehiclePanel extends JPanel implements ActionListener {
         add(colorBox);
         add(mileageBox);
         add(produceYearBox);
+        setPreferredSize(new Dimension(430,290));
     }
 
     public void resultLayout(){
@@ -110,7 +113,7 @@ public class VehiclePanel extends JPanel implements ActionListener {
 
     public void searchLayout(){
         removeAll();
-        setLayout(new GridLayout(0,4));
+        setLayout(new MigLayout("wrap 4","[50][150][50][150]"));
 
         brandCombo = new ComboBox(this,stringOptions);
         add(new Box(new Label(""),brandCombo));

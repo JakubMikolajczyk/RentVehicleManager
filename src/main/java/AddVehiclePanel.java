@@ -26,7 +26,7 @@ public class AddVehiclePanel extends JPanel implements ActionListener {
 
         carPanel = new CarPanel(new Car(),true);
         carPanel.addLayout();
-        truckPanel = new TruckPanel(new Truck(),false);
+        truckPanel = new TruckPanel(new Truck(),true);
         truckPanel.addLayout();
         mainPanel.add(carPanel,"car");
         mainPanel.add(truckPanel,"truck");
@@ -41,8 +41,6 @@ public class AddVehiclePanel extends JPanel implements ActionListener {
 
         add(new Button(this, "Add to database","addToDatabase"),"width 200");
         add(new Button(listener,"Return to menu","returnMenu"),"width 200");
-
-        truckPanel.makeRed(truckPanel);
 
     }
 

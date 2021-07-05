@@ -25,6 +25,7 @@ public class SearchVehicleResults extends JPanel {
 
         panel.resultLayout();
         panel.makeRed(panel);
+        panel.setBackground(Color.red);
         VehiclePanel finalPanel = panel;
         panel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -80,7 +81,7 @@ public class SearchVehicleResults extends JPanel {
 
 
         for (Vehicle vehicle : vehicles)
-            if (database.hasRentVehicle(vehicle.registrationPlate))
+            if (database.isVehicleRent(vehicle.registrationPlate))
                 makeRentResult(vehicle);
             else
                 makeResult(vehicle);
@@ -134,10 +135,10 @@ public class SearchVehicleResults extends JPanel {
         int n = 0;
 
         if (database.isVehicleRent(vehicle.registrationPlate))
-            n = JOptionPane.showConfirmDialog(this, "This client has rent car? Remove anyway?", "Confirm", JOptionPane.YES_NO_OPTION);
+            n = JOptionPane.showConfirmDialog(this, "This vehicle is rent? Remove anyway?", "Confirm", JOptionPane.YES_NO_OPTION);
 
         if (n == 0) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to remove client from database?", "Confirm", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to remove vehicle from database?", "Confirm", JOptionPane.YES_NO_OPTION);
 
             if (confirm == 0) {
                 database.removeVehicle(vehicle);
@@ -154,7 +155,7 @@ public class SearchVehicleResults extends JPanel {
 
         if(!database.idCheck(id))
             JOptionPane.showMessageDialog(this,id + " is not in database. Add new client first","Warning",JOptionPane.WARNING_MESSAGE);
-        else {  //TODO not working
+        else {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to rent vehicle?", "Confirm", JOptionPane.YES_NO_OPTION);
             if (confirm == 0) {
                 database.rent(id, vehicle.registrationPlate);

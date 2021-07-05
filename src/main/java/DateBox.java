@@ -66,7 +66,6 @@ public class DateBox extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-    //TODO Refactor to source == ComboBox
 
         ComboBox source = (ComboBox) e.getSource();
         int index = source.getSelectedIndex();

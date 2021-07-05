@@ -45,25 +45,27 @@ public class SearchVehiclePanel extends JPanel implements ActionListener {
         JPanel search = new JPanel();
         search.setLayout(new MigLayout());
 
-        search.add(new Button(this,"Car","car"),"width 200");
-        search.add(new Button(this,"Truck","truck"),"wrap, width 200");
+        search.add(new Button(this,"Car","car"),"width 235");
+        search.add(new Button(this,"Truck","truck"),"wrap, width 235");
         search.add(vehiclePanel,"span 2, wrap");
-        search.add(new Button(this, "Search in database","search"),"width 200");
-        search.add(new Button(listener,"Return to menu","returnMenu"),"width 200");
+        search.add(new Button(this, "Search in database","search"),"width 235");
+        search.add(new Button(listener,"Return to menu","returnMenu"),"width 235");
 
         JPanel results = new JPanel();
         results.setLayout(new MigLayout());
-        searchVehicleResults = new SearchVehicleResults(database);
 
+        searchVehicleResults = new SearchVehicleResults(database);
         jsp = new JScrollPane(searchVehicleResults);
         results.add(jsp,"wrap, span 2");
-        results.add(new Button(this,"Return to search","returnSearch"),"width 295");
-        results.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
+        results.add(new Button(this,"Return to search","returnSearch"),"width 430");
+        results.add(new Button(listener,"Return to menu","returnMenu"),"width 430");
 
         mainPanel.add(search,"search");
         mainPanel.add(results, "results");
 
-        add(mainPanel,"wrap, span, width 400");
+        setLayout(new MigLayout());
+        setSize(new Dimension(560,330));
+        add(mainPanel,"alignX right");
 
 
     }
@@ -100,28 +102,30 @@ public class SearchVehiclePanel extends JPanel implements ActionListener {
 
 
             if (vehicles.size() == 0)
-                System.out.println("WAR");  //TODO No result warning
+                JOptionPane.showMessageDialog(this,"Not result found");
             else {
-                jsp.setPreferredSize(new Dimension(900, 120));
+                jsp.setPreferredSize(new Dimension(760, 130));
                 if (show)
                     searchVehicleResults.newSearch(vehicles, truckPanel.getCompare());
                 else
                     searchVehicleResults.newSearch(vehicles, carPanel.getCompare());
                 cardLayout.show(mainPanel, "results");
-                listener.setSize(1000, 300);  //TODO
+                listener.setSize(760, 220);
             }
 
         }
 
         if (e.getActionCommand().equals("returnSearch")){
-//            searchMode();
+            searchMode();
             cardLayout.show(mainPanel, "search");
         }
 
     }
 
     public void searchMode(){
-
+        listener.setSize(470,350);
+        jsp.setPreferredSize(new Dimension(100,100));
+        cardLayout.show(mainPanel,"search");
     }
 
 }
