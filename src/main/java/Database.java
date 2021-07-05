@@ -23,6 +23,11 @@ public class Database implements Serializable {
                 cars = new HashSet<>();
                 rentRegistrationPlate = new HashMap<>();
                 rentId = new HashMap<>();
+
+                Client client = new Client();
+                client.id="13";
+
+                clients.add(client);
         }
 
         boolean hasRentVehicle(String id){
@@ -51,22 +56,67 @@ public class Database implements Serializable {
 
                 ArrayList<Client> list = new ArrayList<>();
 
-                for(Client it : clients){
+                for(Client it : clients)
                         if (clientCompare.compare(it))
                                 list.add(it);
-                }
+
 
                 return list;
 
         }
 
+        public ArrayList<Vehicle> searchVehicleInDatabase(VehicleCompare vehicleCompare){
+                ArrayList <Vehicle> list = new ArrayList<>();
 
+                for (Vehicle it : cars)
+                        if (vehicleCompare.compare(it))
+                                list.add(it);
+
+                for(Vehicle it : trucks)
+                        if (vehicleCompare.compare(it))
+                                list.add(it);
+
+                return list;
+        }
+
+        public ArrayList<Vehicle> searchVehicleInDatabase(CarCompare carCompare){
+
+                ArrayList <Vehicle> list = new ArrayList<>();
+
+                for (Vehicle it : cars)
+                        if (carCompare.compare(it))
+                                list.add(it);
+
+                return list;
+
+        }
+
+        public ArrayList<Vehicle> searchVehicleInDatabase(TruckCompare truckCompare){
+
+                ArrayList <Vehicle> list = new ArrayList<>();
+
+                for (Vehicle it : trucks)
+                        if (truckCompare.compare(it))
+                                list.add(it);
+
+                return list;
+
+        }
 
         public void addToDatabase(Client newC){
 
                 saved = false;
                 clients.add(newC);
                 idInDatabase.add(newC.id);
+        }
+
+        public void addToDatabase(Vehicle newVehicle){
+
+                if (newVehicle.getClass().equals(Car.class))
+                        addToDatabase((Car) newVehicle);
+
+                if (newVehicle.getClass().equals(Truck.class))
+                        addToDatabase((Truck) newVehicle);
         }
 
         public void addToDatabase(Car newC){
@@ -117,7 +167,9 @@ public class Database implements Serializable {
 
                 saved = false;
                 clients.remove(oldClient);
+                idInDatabase.remove(oldClient.id);
                 clients.add(newClient);
+                idInDatabase.add(newClient.id);
 
 
         }
@@ -129,8 +181,9 @@ public class Database implements Serializable {
 
                 saved = false;
                 trucks.remove(oldTruck);
+                registrationPlateInDatabase.remove(oldTruck.registrationPlate);
                 trucks.add(newTruck);
-
+                registrationPlateInDatabase.add(newTruck.registrationPlate);
         }
 
         public void editInDatabase(Car oldCar, Car newCar){
@@ -139,11 +192,71 @@ public class Database implements Serializable {
                         changeRentRegistrationPlate(oldCar.registrationPlate,newCar.registrationPlate);
                 saved = false;
                 cars.remove(oldCar);
+                registrationPlateInDatabase.remove(oldCar.registrationPlate);
                 cars.add(newCar);
+                registrationPlateInDatabase.add(newCar.registrationPlate);
 
         }
 
 
+        public void returnVehicleId(String id){
+
+                saved = false;
+                HashSet <String> registryPlates = rentId.get(id);
+
+                for (String it : registryPlates)
+                        rentRegistrationPlate.remove(it);
+
+                rentId.remove(id);
+        }
+
+        public void returnVehicleRegistrationPlate(String registrationPlate){
+
+                saved = false;
+                String id = rentRegistrationPlate.get(registrationPlate);
+                HashSet <String> set = rentId.get(id);
+                set.remove(registrationPlate);
+
+                rentId.put(id,set);
+                rentRegistrationPlate.remove(registrationPlate);
+
+        }
+
+        public void removeClient(Client client) {
+
+                saved = false;
+                if (hasRentVehicle(client.id))
+                        returnVehicleId(client.id);
+
+                clients.remove(client);
+                idInDatabase.remove(client.id);
+        }
+
+        public void removeVehicle(Vehicle vehicle){
+                if (vehicle.getClass().equals(Car.class))
+                        removeVehicle(((Car) vehicle));
+                else
+                        removeVehicle((Truck) vehicle);
+        }
+        public void removeVehicle(Car car){
+
+                saved = false;
+                if(isVehicleRent(car.registrationPlate))
+                        returnVehicleRegistrationPlate(car.registrationPlate);
+
+                cars.remove(car);
+                registrationPlateInDatabase.remove(car.registrationPlate);
+        }
+
+        public void removeVehicle(Truck truck){
+
+                saved = false;
+                if (isVehicleRent(truck.registrationPlate))
+                        returnVehicleRegistrationPlate(truck.registrationPlate);
+
+                trucks.remove(truck);
+                registrationPlateInDatabase.remove(truck.registrationPlate);
+        }
 
         public boolean idCheck(String id){         //Check
                 return idInDatabase.contains(id);
@@ -151,5 +264,14 @@ public class Database implements Serializable {
 
         public boolean registrationPlateCheck(String plate){
                 return registrationPlateInDatabase.contains(plate);
+        }
+
+        public void editInDatabase(Vehicle oldVehicle, Vehicle newVehicle) {
+
+                if (oldVehicle.getClass().equals(Car.class))
+                        editInDatabase((Car) oldVehicle,(Car) newVehicle);
+
+                if (oldVehicle.getClass().equals(Truck.class))
+                        editInDatabase((Truck) oldVehicle,(Truck) newVehicle);
         }
 }

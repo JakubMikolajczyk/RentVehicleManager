@@ -12,7 +12,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
    private App listener;
    private CardLayout cardLayout;
    private JPanel mainPanel;
-   private ClientSearchPanel clientSearchPanel;
+   private ClientPanel clientSearchPanel;
    private SearchClientResults searchClientResults;
    private JScrollPane jsp;
 
@@ -29,7 +29,9 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         //TODO repair searchClientPanel resolution, trouble with jsp.setPreferredSize
 
-        clientSearchPanel = new ClientSearchPanel(new Client(),true);
+        clientSearchPanel = new ClientPanel(new Client(),true);
+        clientSearchPanel.searchLayout();
+
         search.add(clientSearchPanel,"span 2, wrap");
         search.add(new Button(this,"Search in database","search"),"width 295");
         search.add(new Button(listener,"Return to menu","returnMenu"),"width 295");
@@ -57,13 +59,13 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         if (e.getActionCommand().equals("search")) {
 
-            ArrayList<Client> clients = database.searchClientInDatabase(clientSearchPanel.getClientCompare());
+            ArrayList<Client> clients = database.searchClientInDatabase(clientSearchPanel.getCompare());
 
             if (clients.size() == 0)
                 System.out.println("WAR");  //TODO No result warning
             else {
                 jsp.setPreferredSize(new Dimension(900, 120));
-                searchClientResults.newSearch(clients);
+                searchClientResults.newSearch(clients,clientSearchPanel.getCompare());
                 cardLayout.show(mainPanel, "results");
                 listener.setSize(1000, 300);  //TODO
             }
@@ -72,7 +74,7 @@ public class SearchClientPanel extends JPanel implements ActionListener {
 
         if (e.getActionCommand().equals("returnSearch")){
             searchMode();
-//            cardLayout.show(mainPanel, "search");
+            cardLayout.show(mainPanel, "search");
         }
     }
 

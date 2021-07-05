@@ -2,30 +2,57 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class ClientPanel extends JPanel {
+public class ClientPanel extends JPanel implements ActionListener {
 
 
 
     private TextField nameField;
-    private TextField surnameField;
-    private TextField idField;
-    private TextField zipCodeField;
-    private TextField streetField;
-    private TextField cityField;
-    private TextField buildingNumberField;
-    private TextField apartmentNumberField;
-    private DateBox dateComboBox;
+    private Box nameBox;
+    private ComboBox nameCombo;
+    private int nameIndex;
 
-    protected Box nameBox;
-    protected Box surnameBox;
-    protected Box idBox;
-    protected Box zipCodeBox;
-    protected Box streetBox;
-    protected Box cityBox;
-    protected Box buildingNumberBox;
-    protected Box apartmentNumberBox;
-    protected Box dateBox;
+    private TextField surnameField;
+    private Box surnameBox;
+    private ComboBox surnameCombo;
+    private int surnameIndex;
+
+    private TextField idField;
+    private Box idBox;
+    private ComboBox idCombo;
+    private int idIndex;
+
+    private DateBox dateComboBox;
+    private Box dateBox;
+    private ComboBox dateCombo;
+    private int dateIndex;
+
+    private TextField zipCodeField;
+    private Box zipCodeBox;
+    private ComboBox zipCodeCombo;
+    private int zipCodeIndex;
+
+    private TextField streetField;
+    private Box streetBox;
+    private ComboBox streetCombo;
+    private int streetIndex;
+
+    private TextField cityField;
+    private Box cityBox;
+    private ComboBox cityCombo;
+    private int cityIndex;
+
+    private TextField buildingNumberField;
+    private Box buildingNumberBox;
+    private ComboBox buildingNumberCombo;
+    private int buildingNumberIndex;
+
+    private TextField apartmentNumberField;
+    private Box apartmentNumberBox;
+    private ComboBox apartmentNumberCombo;
+    private int apartmentNumberIndex;
 
     public ClientPanel(Client client, boolean editable){
 
@@ -84,7 +111,7 @@ public class ClientPanel extends JPanel {
 
     }
 
-    public void addClientLayout(){
+    public void addLayout(){
         removeAll();
         setLayout(new GridLayout(0,2));
 
@@ -123,7 +150,116 @@ public class ClientPanel extends JPanel {
         add(dateBox);
         add(streetBox);
         add(test);
+
     }
+
+    public void searchLayout(){
+        String[] stringOptions = {"equal","begin","end","contain"};
+        String[] intOptions = {"==","<","<=",">",">="};
+
+        setLayout(new GridLayout(0,4));
+        nameCombo = new ComboBox(this,stringOptions);
+//        nameBox.setPreferredSize(new Dimension(150,20));
+        add(new Box(new Label(""),nameCombo));
+        add(nameBox);
+
+        surnameCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),surnameCombo) );
+        add(surnameBox);
+
+        idCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),idCombo));
+        add(idBox);
+
+        dateCombo = new ComboBox(this,intOptions);
+        add(new Box(new Label(""),dateCombo));
+        add(dateBox);
+
+        cityCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),cityCombo));
+        add(cityBox);
+
+        zipCodeCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),zipCodeCombo));
+        add(zipCodeBox);
+
+        streetCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),streetCombo));
+        add(streetBox);
+
+        //TODO repair size
+        JPanel box1 = new JPanel();
+        box1.setLayout(new GridLayout(1,2));
+
+        JPanel box2 = new JPanel();
+        box2.setLayout(new GridLayout(1,2  ));
+        buildingNumberCombo = new ComboBox(this,intOptions);
+
+        box1.add(new Box(new Label(""),buildingNumberCombo));
+        box1.add(buildingNumberBox);
+
+        add(box1);
+
+        apartmentNumberCombo = new ComboBox(this,intOptions);
+        box2.add(new Box(new Label(""),apartmentNumberCombo));
+        box2.add(apartmentNumberBox);
+        add(box2);
+
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        ComboBox source = (ComboBox) e.getSource();
+
+        if(source == nameCombo)
+            nameIndex = source.getSelectedIndex();
+
+        if(source == surnameCombo)
+            surnameIndex = source.getSelectedIndex();
+
+        if(source == idCombo)
+            idIndex = source.getSelectedIndex();
+
+        if(source == dateCombo)
+            dateIndex = source.getSelectedIndex();
+
+        if(source == cityCombo)
+            cityIndex = source.getSelectedIndex();
+
+        if(source == zipCodeCombo)
+            zipCodeIndex = source.getSelectedIndex();
+
+        if(source == streetCombo)
+            streetIndex = source.getSelectedIndex();
+
+        if(source == buildingNumberCombo)
+            buildingNumberIndex = source.getSelectedIndex();
+
+        if(source == apartmentNumberCombo)
+            apartmentNumberIndex = source.getSelectedIndex();
+
+    }
+
+    public ClientCompare getCompare(){
+        ClientCompare newCompareC = new ClientCompare(getClient());
+
+
+        newCompareC.nameParam = nameIndex;
+        newCompareC.surnameParam = surnameIndex;
+        newCompareC.idParam = idIndex;
+        newCompareC.birthDateParam = dateIndex;
+
+        newCompareC.addressParam.cityParam = cityIndex;
+        newCompareC.addressParam.zipCodeParam = zipCodeIndex;
+        newCompareC.addressParam.streetParam = streetIndex;
+        newCompareC.addressParam.buildingNumberParam = buildingNumberIndex;
+        newCompareC.addressParam.apartmentNumberParam = apartmentNumberIndex;
+
+        return newCompareC;
+    }
+
 
     public void addToDatabase(Database database){
         if(validCheck(database)) {
@@ -150,13 +286,13 @@ public class ClientPanel extends JPanel {
 
     }
 
-    private boolean validCheck(Database database){
+    public boolean validCheck(Database database){
         boolean test = isInt(apartmentNumberField,"No. apartment")
                 && isInt(buildingNumberField,"No. building");
 
         if (test){
 
-            if(idField.getTxt().equals("0")) {
+            if(idField.getTxt().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Id must be fill.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }

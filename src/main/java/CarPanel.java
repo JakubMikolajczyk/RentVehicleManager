@@ -1,30 +1,86 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class CarPanel extends VehiclePanel{
 
     private TextField seatsField;
+    private Box seatsBox;
+    private ComboBox seatsCombo;
+    private int seatsIndex;
+
     private TextField doorsField;
+    private Box doorsBox;
+    private ComboBox doorsCombo;
+    private int doorsIndex;
 
     public CarPanel( Car car,boolean editable){
 
         super(car,editable);
 
-        add(new Label("Seats"));
-        add(new Label("Doors"),"wrap");
-
         if (car.seats == 0 && editable)
             seatsField = new TextField("Seats","Seats",true);
         else
             seatsField = new TextField("Seats",Integer.toString(car.seats),false);
-
-        add(seatsField,"width 200");
+        seatsBox = new Box(new Label("Seats"),seatsField);
 
         if (car.doors == 0 && editable)
             doorsField = new TextField("Doors","Doors",true);
         else
             doorsField = new TextField("Doors",Integer.toString(car.doors),false);
+        doorsBox = new Box(new Label("Doors"),doorsField);
 
-        add(doorsField,"width 200, wrap");
+    }
+
+    @Override
+    public void addLayout() {
+        super.addLayout();
+        add(seatsBox);
+        add(doorsBox);
+    }
+
+    @Override
+    public void resultLayout() {
+        super.resultLayout();
+        add(seatsBox,0,3);
+        add(doorsBox);
+    }
+
+    @Override
+    public void searchLayout(){
+        super.searchLayout();
+
+        seatsCombo = new ComboBox(this,intOptions);
+        add(new Box(new Label(""),seatsCombo));
+        add(seatsBox);
+
+        doorsCombo = new ComboBox(this,intOptions);
+        add(new Box(new Label(""),doorsCombo));
+        add(doorsBox);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e){
+        super.actionPerformed(e);
+
+        ComboBox source = (ComboBox) e.getSource();
+
+        if (source == seatsCombo)
+            seatsIndex = source.getSelectedIndex();
+
+        if (source == doorsCombo)
+            doorsIndex = source.getSelectedIndex();
+    }
+
+    public CarCompare getCompare(){
+        CarCompare newCompare = new CarCompare(getVehicle());
+        newCompare.copy(super.getCompare());
+
+        newCompare.seatsParam = seatsIndex;
+        newCompare.doorsParam = doorsIndex;
+
+        return newCompare;
     }
 
     protected boolean validCheck(Database database){
@@ -33,15 +89,15 @@ public class CarPanel extends VehiclePanel{
                 && isInt(doorsField,"Doors");
     }
 
-    public Car getCar() {
+    public Car getVehicle() {
 
-        Car newC = new Car();
-        newC.copy(super.getVehicle());
+        Car newCar = new Car();
+        newCar.copy(super.getVehicle());
 
-        newC.seats = Integer.parseInt(seatsField.getTxt());
-        newC.doors = Integer.parseInt(doorsField.getTxt());
+        newCar.seats = Integer.parseInt(seatsField.getTxt());
+        newCar.doors = Integer.parseInt(doorsField.getTxt());
 
-        return newC;
+        return newCar;
 
     }
 
@@ -50,7 +106,7 @@ public class CarPanel extends VehiclePanel{
         if(validCheck(database)) {
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure to add a new client to the database?", "Confirm", JOptionPane.YES_NO_OPTION);
             if (confirm == 0)
-                database.addToDatabase(getCar());
+                database.addToDatabase(getVehicle());
         }
     }
 

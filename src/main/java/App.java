@@ -20,6 +20,8 @@ public class App extends JFrame implements ActionListener{
     private AddClientPanel addClientJPanel;
     private AddVehiclePanel addVehiclePanel;
     private SearchClientPanel searchClientPanel;
+    private SearchVehiclePanel searchVehiclePanel;
+
     private SearchInfo searchInfo;
 
     public App(){
@@ -35,12 +37,13 @@ public class App extends JFrame implements ActionListener{
         addClientJPanel = new AddClientPanel(this, database);
         addVehiclePanel = new AddVehiclePanel(this,database);
         searchClientPanel = new SearchClientPanel(this, database);
+        SearchVehiclePanel searchVehiclePanel = new SearchVehiclePanel(this, database);
 
         mainPanel.add(menuJPanel,"menu");
         mainPanel.add(addClientJPanel,"addClient");
         mainPanel.add(addVehiclePanel,"addVehicle");
         mainPanel.add(searchClientPanel,"searchClient");
-
+        mainPanel.add(searchVehiclePanel,"searchVehicle");
         add(mainPanel);
         setLocation(700, 300);
         setSize(new Dimension(200,300));
@@ -65,13 +68,13 @@ public class App extends JFrame implements ActionListener{
         //MENU *********************************
         if (source.equals("addClient")) {
             cardLayout.show(mainPanel, "addClient");
-            setSize(new Dimension(420,360));
+            setSize(new Dimension(430,290));
             setTitle("Add new client");
         }
 
         if (source.equals("addVehicle")) {
             cardLayout.show(mainPanel, "addVehicle");
-            setSize(new Dimension(420,360));
+            setSize(new Dimension(430,320));
         }
 
         if (source.equals("searchClient")) {

@@ -17,8 +17,8 @@ public class AddClientPanel extends JPanel implements ActionListener {
         setLayout(new MigLayout());
 
         clientPanel = new ClientPanel(new Client(),true);
-        clientPanel.addClientLayout();
-        add(clientPanel,"span 2, wrap");
+        clientPanel.addLayout();
+        add(clientPanel,"span, wrap,width 400");
         add(new Button(this,"Add to database","addToDatabase"),"width 200");
         add(new Button(listener,"Return to menu","returnMenu"),"width 200");
     }

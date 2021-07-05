@@ -1,70 +1,194 @@
-import net.miginfocom.swing.MigLayout;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class VehiclePanel extends JPanel {
+public class VehiclePanel extends JPanel implements ActionListener {
 
     private TextField brandField;
-    private TextField modelField;
-    private TextField registrationPlateField;
-    private TextField colorField;
-    private TextField mileageField;
-    private TextField produceYearField;
+    private Box brandBox;
+    private ComboBox brandCombo;
+    private int brandIndex;
 
+    private TextField modelField;
+    private Box modelBox;
+    private ComboBox modelCombo;
+    private int modelIndex;
+
+    private TextField registrationPlateField;
+    private Box registrationPlateBox;
+    private ComboBox registrationPlateCombo;
+    private int registrationPlateIndex;
+
+    private TextField colorField;
+    private Box colorBox;
+    private ComboBox colorCombo;
+    private int colorIndex;
+
+    private TextField mileageField;
+    private Box mileageBox;
+    private ComboBox mileageCombo;
+    private int mileageIndex;
+
+    private TextField produceYearField;
+    private Box produceYearBox;
+    private ComboBox produceYearCombo;
+    private int produceYearIndex;
+    
+    
+    protected String[] stringOptions = {"equal","begin","end","contain"};
+    protected String[] intOptions = {"==","<","<=",">",">="};
+    
     public VehiclePanel(Vehicle vehicle,boolean editable){
-        setLayout(new MigLayout());
 
         setBorder(BorderFactory.createLineBorder(Color.black));
 
-        add(new Label("Brand"));
-        add(new Label("Model"),"wrap");
-
         brandField = new TextField("Brand",vehicle.brand,editable);
-        add(brandField,"width 200");
+        brandBox = new Box(new Label("Brand"),brandField);
 
         modelField = new TextField("Model",vehicle.model,editable);
-        add(modelField,"wrap, width 200");
-
-        add(new Label("Registration plate"));
-        add(new Label("Color"),"wrap");
+        modelBox = new Box(new Label("Model"),modelField);
 
         registrationPlateField = new TextField("Registration plate",vehicle.registrationPlate,editable);
-        add(registrationPlateField,"width 200");
+        registrationPlateBox = new Box(new Label("Registration plate"),registrationPlateField);
 
         colorField = new TextField("Color",vehicle.color,editable);
-        add(colorField,"width 200, wrap");
-
-        add(new Label("Mileage"));
-        add(new Label("Produce year"),"wrap");
+        colorBox = new Box(new Label("Color"),colorField);
 
         if (vehicle.mileage == 0 && editable)
             mileageField = new TextField("Mileage","Mileage",true);
         else
             mileageField = new TextField("Mileage",Integer.toString(vehicle.mileage),false);
 
-        add(mileageField, "width 200");
+        mileageBox = new Box(new Label("Mileage"),mileageField);
 
         if (vehicle.produceYear == 0 && editable)
             produceYearField = new TextField("Produce year","Produce year",true);
         else
             produceYearField = new TextField("Produce year",Integer.toString(vehicle.produceYear),false);
-        add(produceYearField,"width 200, wrap");
 
+        produceYearBox = new Box(new Label("Produce year"),produceYearField );
+
+    }
+
+    public void addLayout(){
+        removeAll();
+        setLayout(new GridLayout(0,2));
+        add(brandBox);
+        add(modelBox);
+        add(registrationPlateBox);
+        add(colorBox);
+        add(mileageBox);
+        add(produceYearBox);
+    }
+
+    public void resultLayout(){
+        setLayout(new GridLayout(2,0));
+        add(brandBox);
+        add(registrationPlateBox);
+        add(mileageBox);
+
+        add(modelBox);
+        add(colorBox);
+        add(produceYearBox);
     }
 
     public Vehicle getVehicle(){
 
-        Vehicle newV = new Vehicle();
+        Vehicle newVehicle = new Vehicle();
 
-        newV.registrationPlate = registrationPlateField.getTxt();
-        newV.brand = brandField.getTxt();
-        newV.model = modelField.getTxt();
-        newV.color = colorField.getTxt();
-        newV.mileage = Integer.parseInt(mileageField.getTxt());
-        newV.produceYear = Integer.parseInt(produceYearField.getTxt());
+        newVehicle.registrationPlate = registrationPlateField.getTxt();
+        newVehicle.brand = brandField.getTxt();
+        newVehicle.model = modelField.getTxt();
+        newVehicle.color = colorField.getTxt();
+        newVehicle.mileage = Integer.parseInt(mileageField.getTxt());
+        newVehicle.produceYear = Integer.parseInt(produceYearField.getTxt());
 
-        return newV;
+        return newVehicle;
+
+    }
+
+    public void searchLayout(){
+        removeAll();
+        setLayout(new GridLayout(0,4));
+
+        brandCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),brandCombo));
+        add(brandBox);
+
+        modelCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),modelCombo));
+        add(modelBox);
+
+        registrationPlateCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),registrationPlateCombo));
+        add(registrationPlateBox);
+
+        colorCombo = new ComboBox(this,stringOptions);
+        add(new Box(new Label(""),colorCombo));
+        add(colorBox);
+
+        mileageCombo = new ComboBox(this,intOptions);
+        add(new Box(new Label(""),mileageCombo));
+        add(mileageBox);
+
+        produceYearCombo = new ComboBox(this,intOptions);
+        add(new Box(new Label(""),produceYearCombo));
+        add(produceYearBox);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        ComboBox source = (ComboBox) e.getSource();
+
+        if (source == brandCombo)
+            brandIndex = source.getSelectedIndex();
+
+        if (source == modelCombo)
+            modelIndex = source.getSelectedIndex();
+
+        if (source == registrationPlateCombo)
+            registrationPlateIndex = source.getSelectedIndex();
+
+        if (source == colorCombo)
+            colorIndex = source.getSelectedIndex();
+
+        if(source == mileageCombo)
+            mileageIndex = source.getSelectedIndex();
+
+        if (source == produceYearCombo)
+            produceYearIndex = source.getSelectedIndex();
+    }
+
+    public VehicleCompare getCompare(){
+        VehicleCompare newCompare = new VehicleCompare(getVehicle());
+
+        newCompare.brandParam = brandIndex;
+        newCompare.modelParam = modelIndex;
+        newCompare.registrationPlateParam = registrationPlateIndex;
+        newCompare.colorParam = colorIndex;
+        newCompare.mileageParam = mileageIndex;
+        newCompare.produceYearParam = produceYearIndex;
+
+        return newCompare;
+    }
+
+
+    public void makeRed(Container container){
+
+        for (Component component : container.getComponents()) {
+
+                component.setBackground(Color.red);
+                if (component instanceof TextField)
+                    component.setForeground(Color.white);
+                else
+                    component.setForeground(Color.yellow);
+
+            makeRed((Container) component);
+            revalidate();
+            repaint();
+        }
 
     }
 
